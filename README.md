@@ -73,7 +73,7 @@ import com.capotej.finatra_core.{Controller, Controllers, GenericRequest, Generi
 object PretendServer {
   val myApp = new MyApp
   val otherApp = new OtherApp
-  val anotherApp = new AnotherAPp
+  val anotherApp = new AnotherApp
   
   val controllers = new Controllers
   
