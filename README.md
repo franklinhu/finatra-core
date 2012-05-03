@@ -63,6 +63,41 @@ object PretendServer {
 }
 ```
 
+#### Multiple controllers
+If you have multiple controllers, you can use the ```Controllers``` class to encapsulate dispatching over many controllers. Example:
+
+```scala
+import com.capotej.finatra_core.{Controller, Controllers, GenericRequest, GenericResponse}
+
+
+object PretendServer {
+  val myApp = new MyApp
+  val otherApp = new OtherApp
+  val anotherApp = new AnotherAPp
+  
+  val controllers = new Controllers
+  
+  // Will be improved with varargs in the future
+  def init() = {
+     controllers.register(myApp)
+     controllers.register(otherApp)
+     controllers.register(anotherApp)
+  }  
+
+  def handleRequest(rawRequest:SomeKindOfRequest):AnResponse = {
+    //Build the Generic Request based on SomeKindOfRequest
+    val request = new GenericRequest(path=rawRequest.getThePath,
+                       headers=rawRequest.theHeadersGetThem, 
+                       method=rawRequest.whatIsTheMethod)
+    
+    val response = controllers.dispatch(request)
+  	(response.status, response.body, response.headers)
+  }
+}
+
+```
+
+
 
  
 
