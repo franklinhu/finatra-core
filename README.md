@@ -28,19 +28,26 @@ An easy way to embed the popular [Sinatra](http://sinatrarb.com) routing DSL int
 #### An example controller definition
 
 ```scala
-import com.capotej.finatra_core.Controller
+import com.capotej.finatra_core.{Controller, GenericRequest, GenericResponse}
 
 class MyApp extends Controller {
   get("/hello") { request =>
     renderString("world")
   }
+  
+  get("/my/name/is/:name") { request => 
+    renderString(request.params("name"))
+  }
 }
 ```
 
 #### Using the controller
-Here we have a ```PretendServer``` that calls ```handleRequest``` with it's own ```SomeKindOfRequest``` (which has ridiculous methods for accessing its fields) object for every incoming request and returns an ```Array``` like ```[200, "hey", Map()]```. All we need to do is adapt those to finatra's ```GenericRequest``` and ```GenericResponse``` objects, respectively.
+Here we have a ```PretendServer``` that calls ```handleRequest``` with it's own ```SomeKindOfRequest``` (which has ridiculous methods for accessing its fields) object for every incoming request and returns an ```Tuple3``` like ```(200, "hey", Map())```. All we need to do is adapt those to finatra's ```GenericRequest``` and ```GenericResponse``` objects, respectively.
 
 ```scala
+
+import com.capotej.finatra_core.{Controller, GenericRequest, GenericResponse}
+
 object PretendServer {
   val myApp = new MyApp
 
@@ -55,6 +62,7 @@ object PretendServer {
   }
 }
 ```
+
 
 
 
