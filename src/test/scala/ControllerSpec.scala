@@ -16,7 +16,6 @@ class FakeApp extends Controller {
 
   get("/redirectme") { r => redirect("/gohere") }
 
-
   get("/name/is/:name") { r => renderString(r.params("name")) }
 }
 

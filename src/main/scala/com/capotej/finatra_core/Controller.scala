@@ -8,6 +8,7 @@ import scala.collection.mutable.ListBuffer
 case class GenericRequest
   (var path: String, 
    var method: String = "GET",
+   var body: Array[Byte] = Array(),
    var params: Map[String, String] = Map(),
    var headers: Map[String, String] = Map())
 

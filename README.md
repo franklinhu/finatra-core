@@ -77,7 +77,6 @@ object PretendServer {
   
   val controllers = new Controllers
   
-  // Will be improved with varargs in the future
   def init() = {
      controllers.register(myApp)
      controllers.register(otherApp)
