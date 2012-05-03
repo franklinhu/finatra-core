@@ -12,10 +12,34 @@ case class GenericRequest
    var headers: Map[String, String] = Map())
 
 case class GenericResponse
-  (var body: Array[Byte], 
+  (var body: Array[Byte] = "".getBytes, 
    var headers: Map[String, String] = Map(),
    var status: Int = 200)
 
+
+class Controllers {
+  var ctrls: Seq[Controller] = Seq()
+
+  def dispatch(request: GenericRequest): GenericResponse = {
+    var response = new GenericResponse
+    ctrls.find { ctrl => 
+      response = ctrl.dispatch(request)
+      if(response.status == 404){
+        println("false")
+        false 
+      } else {
+        println("true")
+        true 
+      }
+    } 
+    response
+  }
+
+  def register(controller: Controller) {
+    ctrls = ctrls ++ Seq(controller)  
+  }
+
+}
 
 abstract class Controller(var prefix: String = "") {
 
@@ -40,12 +64,6 @@ abstract class Controller(var prefix: String = "") {
         }
     }
     
-  //  findRoute(request) match {
-  //    case Some((method, pattern, callback)) =>
-  //      callback(request)
-  //    case None => 
-  //      new GenericResponse(body = "Not Found".getBytes, status = 404)
-  //  }
   }
 
   def get(path: String)   (callback: Function1[GenericRequest, GenericResponse]) { addRoute("GET", prefix + path)(callback) }
