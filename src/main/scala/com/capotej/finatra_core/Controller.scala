@@ -42,7 +42,8 @@ class Controllers {
 
 }
 
-abstract class Controller(var prefix: String = "") {
+abstract trait Controller {
+  var prefix: String = "" 
 
   var routes: HashSet[(String, PathPattern, Function1[GenericRequest, GenericResponse])] = HashSet()
 
@@ -92,16 +93,6 @@ abstract class Controller(var prefix: String = "") {
     })
   }
  
-  // def headers() = { Router.request.getHeaders }
-  // def header(name:String) = { Router.request.getHeader(name)}
-  // def params(name:String) = { Router.params(name) }
-  // def render(path:String) = { Router.renderTemplate(path) }
-  // def multiPart(name:String) = { Router.multiParams(name) }
-  // def response() = { Router.response }
-  // def request() = { Router.request }
-  // def headers(pair:Tuple2[String,String]) = { response.headers += pair }
-  // def status(code:Int) = { response.status = code }
-  // def contentType(mtype:String) = { response.mediaType = mtype }
   def renderBytes(arr: Array[Byte]) = { new GenericResponse(body = arr, status = 200, headers = Map()) }
   def renderString(str: String) = { new GenericResponse(body = str.getBytes, status = 200, headers = Map()) }
   def redirect(url: String) = { new GenericResponse(body = "Moved".getBytes, status = 301, headers = Map("Location" -> url)) }

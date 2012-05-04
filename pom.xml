@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.capotej</groupId>
   <artifactId>finatra-core</artifactId>
-  <version>0.0.2</version>
+  <version>0.0.3</version>
   <name>${project.artifactId}</name>
   <description>Abstract Sinatra style controller for use in any web framework</description>
   <inceptionYear>2012</inceptionYear>
