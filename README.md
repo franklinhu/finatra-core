@@ -127,6 +127,11 @@ class MainApp extends PretendController {
   }
 }
 
+//Starting the app
+val mainApp = new MainApp
+
+mainApp.start()
+
 ```
 
 ### Notes/Gotchas
