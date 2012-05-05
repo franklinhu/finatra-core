@@ -25,14 +25,14 @@ An easy way to embed the popular [Sinatra](http://sinatrarb.com) routing DSL int
 
 ## Embedding Guide
 
-#### Our "pretend" frameworw
-For this example, let's suppose we have a ```PretendFramework```, that handles incoming requests by calling a ```handleRequest``` method on classes that extend a ```PretendApp``` parent class and it handles responses by returning a ```Tuple3``` like ```(200, "helo", Map())```
+#### Our "pretend" framework
+For this example, let's suppose we have a ```PretendFramework```, that handles incoming requests by calling a ```handleRequest``` method on classes that extend a ```PretendController``` parent class and it handles responses by returning a ```Tuple3``` like ```(200, "helo", Map())```
 
 For instance:
 
 ```scala
 
-class MyApp extends PretendApp {
+class MyApp extends PretendController {
   
   def handleRequest(request: PretendRequest) = {
   	if(request.getThePath == "/hello")
@@ -59,7 +59,7 @@ Now, let's adapt that into the Sinatra style DSL.
 ```scala
 import com.capotej.finatra_core._
 
-class MyAdaptedController extends PretendApp with FinatraController {
+class MyAdaptedController extends PretendController with FinatraController {
   def handleRequest(request: PretendRequest) = {
     
     val newRequest = new FinatraRequest(path=rawRequest.getThePath,
@@ -104,7 +104,7 @@ class AnotherApp extends AdaptedFinatraController {
   }
 }
 
-class MainApp extends PretendApp {
+class MainApp extends PretendController {
   val controllers = new ControllerCollection 
   
   def init {
