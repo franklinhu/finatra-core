@@ -26,7 +26,7 @@ An easy way to embed the popular [Sinatra](http://sinatrarb.com) routing DSL int
 ## Embedding Guide
 
 #### Our "pretend" framework
-For this example, let's suppose we have a ```PretendFramework```, that handles incoming requests by calling a ```handleRequest``` method on classes that extend a ```PretendController``` parent class and it handles responses by returning a ```Tuple3``` like ```(200, "helo", Map())```
+For this example, let's suppose we have a ```PretendFramework```, that handles incoming requests by calling a ```handleRequest``` method on classes that extend a ```PretendController``` parent class and it handles responses by returning a ```Tuple3``` like ```(200, "helo", Map())```. It also gives you methods like ```init``` and ```start```.
 
 For instance:
 
@@ -119,6 +119,7 @@ class MainApp extends PretendController {
   def handleRequest(request: PretendRequest) = {
     controllers.dispatch(request) match {
       case Some(resp) =>
+        //remember, this is an Any, so you need to cast it to whatever your framework needs 
         resp.asInstanceOf[Tuple3[Int,String,Map[String,String]]]
       case None =>
         Tuple3(404, "not found", Map())
