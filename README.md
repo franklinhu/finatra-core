@@ -18,7 +18,7 @@ An easy way to embed the popular [Sinatra](http://sinatrarb.com) routing DSL int
   <dependency>
     <groupId>com.capotej</groupId>
     <artifactId>finatra-core</artifactId>
-    <version>0.0.5/version>
+    <version>0.0.5</version>
   </dependency>
 </dependencies>
 ```
