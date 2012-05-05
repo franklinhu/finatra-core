@@ -1,7 +1,7 @@
 finatra-core
 ============
 ## Description
-An easy way to embed the popular [Sinatra](http://sinatrarb.com) routing DSL into your Scala framework
+An easy way to embed the popular [Sinatra](http://sinatrarb.com) routing DSL into your Scala web framework
 
 
 ## Installation
@@ -25,75 +25,112 @@ An easy way to embed the popular [Sinatra](http://sinatrarb.com) routing DSL int
 
 ## Embedding Guide
 
-#### An example controller definition
+#### Our "pretend" frameworw
+For this example, let's suppose we have a ```PretendFramework```, that handles incoming requests by calling a ```handleRequest``` method on classes that extend a ```PretendApp``` parent class and it handles responses by returning a ```Tuple3``` like ```(200, "helo", Map())```
+
+For instance:
 
 ```scala
-import com.capotej.finatra_core.{Controller => FinatraController, GenericRequest}
 
-class MyApp extends MyFrameworkController with FinatraController {
+class MyApp extends PretendApp {
+  
+  def handleRequest(request: PretendRequest) = {
+  	if(request.getThePath == "/hello")
+  	  Tuple3(200, "world", Map())
+  	} elsif(request.getThePath == "/foo") {
+   	  Tuple3(200, "bar", Map())
+  	} else { 
+  	  Tuple3(404, "not found", Map())
+  	}
+  }
+}
+
+//Starting the app
+val myApp = new MyApp
+
+myApp.start()
+```
+
+Now, let's adapt that into the Sinatra style DSL.
+
+
+#### Hooking into the framework
+
+```scala
+import com.capotej.finatra_core._
+
+class MyAdaptedController extends PretendApp with FinatraController {
+  def handleRequest(request: PretendRequest) = {
+    
+    val newRequest = new FinatraRequest(path=rawRequest.getThePath,
+                       headers=rawRequest.theHeadersGetThem, 
+                       method=rawRequest.whatIsTheMethod)
+    
+    dispatch(newRequest) match {
+      case Some(resp) => 
+        resp.asInstanceOf[Tuple3[Int, String, Map[String, String]]]
+      case None =>
+        Tuple3(404, "not found", Map())
+    } 
+  }
+}
+
+class MyApp extends AdaptedFinatraController {
   get("/hello") { request =>
     Tuple3(200, "hey", Map())
   }
+  
+  get("/foo") { request =>
+    Tuple3(200, "bar", Map())
   
   get("/my/name/is/:name") { request => 
     Tuple3(200, request.params("name"), Map()) 
   }
 }
-```
 
-#### Using the controller
-Here we have a ```PretendServer``` that calls ```handleRequest``` with it's own ```SomeKindOfRequest``` (which has ridiculous methods for accessing its fields) object for every incoming request and returns an ```Tuple3``` like ```(200, "hey", Map())```. All we need to do is adapt those to finatra's ```GenericRequest``` and ```GenericResponse``` objects, respectively.
+//Starting the app
+val myApp = new myApp
 
-```scala
-
-import com.capotej.finatra_core.{Controller, GenericRequest, GenericResponse}
-
-object PretendServer {
-  val myApp = new MyApp
-
-  def handleRequest(rawRequest:SomeKindOfRequest):AnResponse = {
-    //Build the Generic Request based on SomeKindOfRequest
-    val request = new GenericRequest(path=rawRequest.getThePath,
-                       headers=rawRequest.theHeadersGetThem, 
-                       method=rawRequest.whatIsTheMethod)
-    
-    myApp.dispatch(request)
-  }
-}
+myApp.start()
 ```
 
 #### Multiple controllers
-If you have multiple controllers, you can use the ```Controllers``` class to encapsulate dispatching over many controllers. Example:
+If you have multiple controllers, you can use the ```ControllerCollection``` class to encapsulate dispatching over many controllers. Example: (cont'd from above)
 
 ```scala
-import com.capotej.finatra_core.{Controller, Controllers, GenericRequest, GenericResponse}
+class AnotherApp extends AdaptedFinatraController {
+  get("/bar") { request =>
+    Tuple3(200, "baz", Map())
+  }
+}
 
-
-object PretendServer {
-  val myApp = new MyApp
-  val otherApp = new OtherApp
-  val anotherApp = new AnotherApp
+class MainApp extends PretendApp {
+  val controllers = new ControllerCollection 
   
-  val controllers = new Controllers
-  
-  def init() = {
-     controllers.register(myApp)
-     controllers.register(otherApp)
-     controllers.register(anotherApp)
-  }  
+  def init {
+    val myApp = new myApp
+    val anotherApp = new anotherApp
 
-  def handleRequest(rawRequest:SomeKindOfRequest):AnResponse = {
-    //Build the Generic Request based on SomeKindOfRequest
-    val request = new GenericRequest(path=rawRequest.getThePath,
-                       headers=rawRequest.theHeadersGetThem, 
-                       method=rawRequest.whatIsTheMethod)
-    
-    val response = controllers.dispatch(request)
-  	(response.status, response.body, response.headers)
+    controllers.add(myApp)
+    controllers.add(anotherApp)
+  }
+
+  def handleRequest(request: PretendRequest) = {
+    controllers.dispatch(request) match {
+      case Some(resp) =>
+        resp.asInstanceOf[Tuple3[Int,String,Map[String,String]]]
+      case None =>
+        Tuple3(404, "not found", Map())
+    }
   }
 }
 
 ```
+
+### Notes/Gotchas
+
+The ```dispatch``` method for either the ```FinatraController``` trait or ```ControllerCollection``` returns an ```Option[Any]```, where ```Some``` is when a route was found for that request, and ```None``` is when its not. This means you'll have to implement your own error handling.
+
 
 
 
