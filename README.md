@@ -67,7 +67,8 @@ class MyAdaptedController extends PretendController with FinatraController {
                        method=rawRequest.whatIsTheMethod)
     
     dispatch(newRequest) match {
-      case Some(resp) => 
+      case Some(resp) =>
+        //remember, this is an Any, so you need to cast it to whatever your framework needs 
         resp.asInstanceOf[Tuple3[Int, String, Map[String, String]]]
       case None =>
         Tuple3(404, "not found", Map())
