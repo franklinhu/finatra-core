@@ -6,21 +6,17 @@ import org.scalatest.matchers.ShouldMatchers
 import org.junit.runner.RunWith
 
 class FakeApp extends Controller {
-  get("/") { request =>
-    renderString("resp")
-  }
+  get("/") { request => "resp" }
 
-  get("/other") { r => renderString("otherresp") }
+  get("/other") { r => "otherresp" }
   
-  head("/other") { r => renderString("specialresp") }
+  head("/other") { r => "specialresp" }
 
-  get("/redirectme") { r => redirect("/gohere") }
-
-  get("/name/is/:name") { r => renderString(r.params("name")) }
+  get("/name/is/:name") { r => r.params("name") }
 }
 
 class OtherApp extends Controller {
-  get("/hey") { r => renderString("other guy")}
+  get("/hey") { r => "other guy" }
 }
 
 
@@ -39,8 +35,7 @@ class ControllersSpec extends FlatSpec with ShouldMatchers {
     val request = new GenericRequest(path = "/")
     var response = controllers.dispatch(request)
 
-    response.status should equal (200)
-    response.body should equal ("resp".getBytes)
+    response should equal (Some("resp"))
   }
 
   
@@ -48,9 +43,8 @@ class ControllersSpec extends FlatSpec with ShouldMatchers {
 
     val request = new GenericRequest(path = "/hey")
     var response = controllers.dispatch(request)
-
-    response.status should equal (200)
-    response.body should equal ("other guy".getBytes)
+    
+    response should equal (Some("other guy"))
   }
 
 }
@@ -65,16 +59,14 @@ class ControllerSpec extends FlatSpec with ShouldMatchers {
     val request = new GenericRequest(path = "/")
     var response = fakeApp.dispatch(request)
 
-    response.status should equal (200)
-    response.body should equal ("resp".getBytes)
+    response should equal (Some("resp"))
   }
 
   "HEAD /" should "respond 200" in {
     val request = new GenericRequest(path = "/", method = "HEAD")
     var response = fakeApp.dispatch(request)
 
-    response.status should equal (200)
-    response.body should equal ("resp".getBytes)
+    response should equal (Some("resp"))
   }
 
   "HEAD /other" should "respond 200" in {
@@ -82,32 +74,22 @@ class ControllerSpec extends FlatSpec with ShouldMatchers {
     val request = new GenericRequest(path = "/other", method = "HEAD")
     var response = fakeApp.dispatch(request)
 
-    response.status should equal (200)
-    new String(response.body) should equal ("specialresp")
+    response should equal (Some("specialresp"))
   }
 
   "GET /other" should "respond 200" in {
     val request = new GenericRequest(path = "/other")
     var response = fakeApp.dispatch(request)
 
-    response.status should equal (200)
-    response.body should equal ("otherresp".getBytes)
+    response should equal (Some("otherresp"))
   }
 
-  "GET /redirect" should "redirect"  in {
-    val request = new GenericRequest(path = "/redirectme")
-    var response = fakeApp.dispatch(request)
-
-    response.status should equal (301)
-    response.headers.get("Location") should equal (Some("/gohere"))
-  }
   
   "GET /name/is/bob" should "render bob"  in {
     val request = new GenericRequest(path = "/name/is/bob")
     var response = fakeApp.dispatch(request)
 
-    response.status should equal (200)
-    response.body should equal ("bob".getBytes)
+    response should equal (Some("bob"))
   }
 
 }

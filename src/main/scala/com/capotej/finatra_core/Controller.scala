@@ -17,12 +17,12 @@ case class GenericRequest
 class Controllers {
   var ctrls: Seq[Controller] = Seq()
 
-  def dispatch(request: GenericRequest) = {
-    var response:Any = null
+  def dispatch(request: GenericRequest):Option[Any] = {
+    var response:Option[Any] = None
     ctrls.find { ctrl => 
       ctrl.dispatch(request) match {
         case Some(callbackResponse) => 
-          response = callbackResponse 
+          response = Some(callbackResponse)
           true
         case None => 
           false
@@ -40,17 +40,17 @@ class Controllers {
 abstract trait Controller {
   var prefix: String = "" 
 
-  var routes: HashSet[(String, PathPattern, Function1[GenericRequest, Option[_]])] = HashSet()
+  var routes: HashSet[(String, PathPattern, Function1[GenericRequest, Any])] = HashSet()
 
-  def addRoute(method: String, path: String)(callback: Function1[GenericRequest, Option[_]]) {
+  def addRoute(method: String, path: String)(callback: Function1[GenericRequest, Any]) {
     val regex = SinatraPathPatternParser(path)
     routes += Tuple3(method, regex, callback)
   }
 
-  def dispatch(request: GenericRequest):Option[_] = {
+  def dispatch(request: GenericRequest):Option[Any] = {
     findRoute(request) match {
       case Some((method, pattern, callback)) => 
-        callback(request)
+        Some(callback(request))
       case None => 
         request.method = "GET"
         findRoute(request) match {
@@ -63,12 +63,12 @@ abstract trait Controller {
     
   }
 
-  def get(path: String)   (callback: Function1[GenericRequest, Option[_]]) { addRoute("GET", prefix + path)(callback) }
-  def delete(path: String)(callback: Function1[GenericRequest, Option[_]]) { addRoute("DELETE", prefix + path)(callback) }
-  def post(path: String)  (callback: Function1[GenericRequest, Option[_]]) { addRoute("POST", prefix + path)(callback) }
-  def put(path: String)   (callback: Function1[GenericRequest, Option[_]]) { addRoute("PUT", prefix + path)(callback) }
-  def head(path: String)  (callback: Function1[GenericRequest, Option[_]]) { addRoute("HEAD", prefix + path)(callback) }
-  def patch(path: String) (callback: Function1[GenericRequest, Option[_]]) { addRoute("PATCH", prefix + path)(callback) }
+  def get(path: String)   (callback: Function1[GenericRequest, Any]) { addRoute("GET", prefix + path)(callback) }
+  def delete(path: String)(callback: Function1[GenericRequest, Any]) { addRoute("DELETE", prefix + path)(callback) }
+  def post(path: String)  (callback: Function1[GenericRequest, Any]) { addRoute("POST", prefix + path)(callback) }
+  def put(path: String)   (callback: Function1[GenericRequest, Any]) { addRoute("PUT", prefix + path)(callback) }
+  def head(path: String)  (callback: Function1[GenericRequest, Any]) { addRoute("HEAD", prefix + path)(callback) }
+  def patch(path: String) (callback: Function1[GenericRequest, Any]) { addRoute("PATCH", prefix + path)(callback) }
 
   def extractParams(request:GenericRequest, xs: Tuple2[_, _]) = {
     request.params += Tuple2(xs._1.toString, xs._2.asInstanceOf[ListBuffer[String]].head.toString)
