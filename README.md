@@ -18,7 +18,7 @@ An easy way to embed the popular [Sinatra](http://sinatrarb.com) routing DSL int
   <dependency>
     <groupId>com.capotej</groupId>
     <artifactId>finatra-core</artifactId>
-    <version>0.0.2/version>
+    <version>0.0.5/version>
   </dependency>
 </dependencies>
 ```
@@ -28,15 +28,15 @@ An easy way to embed the popular [Sinatra](http://sinatrarb.com) routing DSL int
 #### An example controller definition
 
 ```scala
-import com.capotej.finatra_core.{Controller, GenericRequest, GenericResponse}
+import com.capotej.finatra_core.{Controller => FinatraController, GenericRequest}
 
-class MyApp extends Controller {
+class MyApp extends MyFrameworkController with FinatraController {
   get("/hello") { request =>
-    renderString("world")
+    Tuple3(200, "hey", Map())
   }
   
   get("/my/name/is/:name") { request => 
-    renderString(request.params("name"))
+    Tuple3(200, request.params("name"), Map()) 
   }
 }
 ```
@@ -57,8 +57,7 @@ object PretendServer {
                        headers=rawRequest.theHeadersGetThem, 
                        method=rawRequest.whatIsTheMethod)
     
-    val response = myApp.dispatch(request)
-  	(response.status, response.body, response.headers)
+    myApp.dispatch(request)
   }
 }
 ```

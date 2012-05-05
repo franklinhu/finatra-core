@@ -5,65 +5,65 @@ import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 import org.junit.runner.RunWith
 
-class FakeApp extends Controller {
+class FakeApp extends FinatraController {
   get("/") { request => "resp" }
 
   get("/other") { r => "otherresp" }
-  
+
   head("/other") { r => "specialresp" }
 
   get("/name/is/:name") { r => r.params("name") }
 }
 
-class OtherApp extends Controller {
+class OtherApp extends FinatraController {
   get("/hey") { r => "other guy" }
 }
 
 
 @RunWith(classOf[JUnitRunner])
-class ControllersSpec extends FlatSpec with ShouldMatchers {
+class ControllerCollectionSpec extends FlatSpec with ShouldMatchers {
 
   val fakeApp = new FakeApp
   val otherApp = new OtherApp
-  val controllers = new Controllers
+  val controllers = new ControllerCollection
 
-  controllers.register(fakeApp)
-  controllers.register(otherApp)
+  controllers.add(fakeApp)
+  controllers.add(otherApp)
 
   "GET /" should "respond 200" in {
 
-    val request = new GenericRequest(path = "/")
+    val request = new FinatraRequest(path = "/")
     var response = controllers.dispatch(request)
 
     response should equal (Some("resp"))
   }
 
-  
+
   "GET /hey" should "respond 200" in {
 
-    val request = new GenericRequest(path = "/hey")
+    val request = new FinatraRequest(path = "/hey")
     var response = controllers.dispatch(request)
-    
+
     response should equal (Some("other guy"))
   }
 
 }
 
 @RunWith(classOf[JUnitRunner])
-class ControllerSpec extends FlatSpec with ShouldMatchers {
+class FinatraControllerSpec extends FlatSpec with ShouldMatchers {
 
   val fakeApp = new FakeApp
 
   "GET /" should "respond 200" in {
 
-    val request = new GenericRequest(path = "/")
+    val request = new FinatraRequest(path = "/")
     var response = fakeApp.dispatch(request)
 
     response should equal (Some("resp"))
   }
 
   "HEAD /" should "respond 200" in {
-    val request = new GenericRequest(path = "/", method = "HEAD")
+    val request = new FinatraRequest(path = "/", method = "HEAD")
     var response = fakeApp.dispatch(request)
 
     response should equal (Some("resp"))
@@ -71,22 +71,22 @@ class ControllerSpec extends FlatSpec with ShouldMatchers {
 
   "HEAD /other" should "respond 200" in {
 
-    val request = new GenericRequest(path = "/other", method = "HEAD")
+    val request = new FinatraRequest(path = "/other", method = "HEAD")
     var response = fakeApp.dispatch(request)
 
     response should equal (Some("specialresp"))
   }
 
   "GET /other" should "respond 200" in {
-    val request = new GenericRequest(path = "/other")
+    val request = new FinatraRequest(path = "/other")
     var response = fakeApp.dispatch(request)
 
     response should equal (Some("otherresp"))
   }
 
-  
+
   "GET /name/is/bob" should "render bob"  in {
-    val request = new GenericRequest(path = "/name/is/bob")
+    val request = new FinatraRequest(path = "/name/is/bob")
     var response = fakeApp.dispatch(request)
 
     response should equal (Some("bob"))
