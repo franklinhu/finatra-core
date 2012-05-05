@@ -51,10 +51,11 @@ val myApp = new MyApp
 myApp.start()
 ```
 
-Now, let's adapt that into the Sinatra style DSL.
-
+Now, let's see how we can hook our dsl into this framework
 
 #### Hooking into the framework
+
+Here we make an ```MyAdaptedController``` that extends from ```PretendController``` but mixes in ```FinatraController```. Then we write our own ```handleRequest``` method which adapts the incoming ```PretendRequest``` to a ```FinatraRequest``` like so:
 
 ```scala
 import com.capotej.finatra_core._
@@ -75,6 +76,11 @@ class MyAdaptedController extends PretendController with FinatraController {
     } 
   }
 }
+```
+
+Now let's use it:
+
+```scala
 
 class MyApp extends AdaptedFinatraController {
   get("/hello") { request =>
