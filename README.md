@@ -17,7 +17,7 @@ An easy way to embed the popular [Sinatra](http://sinatrarb.com) routing DSL int
 <dependencies>
   <dependency>
     <groupId>com.capotej</groupId>
-    <artifactId>finatra-core</artifactId>
+    <artifactId>finatra-core_${scala.version}</artifactId>
     <version>0.0.8</version>
   </dependency>
 </dependencies>
@@ -147,10 +147,16 @@ The ```dispatch``` method for either the ```FinatraController``` trait or ```Con
 
 
 
+## Development Guide
 
+To make a release
 
-
-
+```cli
+mvn clean
+mvn deploy -Dscala.version=2.8.1
+mvn clean
+mvn deploy -Dscala.version=2.9.1
+```
 
 
 
