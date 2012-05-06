@@ -62,6 +62,14 @@ class FinatraControllerSpec extends FlatSpec with ShouldMatchers {
     response should equal (Some("resp"))
   }
 
+  "GET /name/is/bob" should "respond with bob" in {
+
+    val request = new FinatraRequest(path = "/name/is/bob")
+    var response = fakeApp.dispatch(request)
+
+    response should equal (Some("bob"))
+  }
+
   "HEAD /" should "respond 200" in {
     val request = new FinatraRequest(path = "/", method = "HEAD")
     var response = fakeApp.dispatch(request)
