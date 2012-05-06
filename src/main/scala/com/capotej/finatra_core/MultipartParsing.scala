@@ -36,7 +36,6 @@ class MultipartItem(val fileobj:Tuple2[java.util.Map[String,String], ByteArrayOu
 object MultipartParsing {
 
   def loadMultiParams(request: FinatraRequest) = {
-
     var multiParams = Map[String, MultipartItem]()
     val ctype = request.headers.get("Content-Type").getOrElse(null)
     if(ctype != null){

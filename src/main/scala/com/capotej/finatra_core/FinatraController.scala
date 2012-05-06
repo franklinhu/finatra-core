@@ -10,6 +10,7 @@ case class FinatraRequest
    var method: String = "GET",
    var body: Array[Byte] = Array(),
    var params: Map[String, String] = Map(),
+   var multiParams: Map[String, MultipartItem] = Map(),
    var headers: Map[String, String] = Map())
 
 
@@ -48,6 +49,7 @@ abstract trait FinatraController {
   }
 
   def dispatch(request: FinatraRequest):Option[Any] = {
+    request.multiParams = MultipartParsing.loadMultiParams(request)
     findRoute(request) match {
       case Some((method, pattern, callback)) =>
         Some(callback(request))
