@@ -18,7 +18,7 @@ An easy way to embed the popular [Sinatra](http://sinatrarb.com) routing DSL int
   <dependency>
     <groupId>com.capotej</groupId>
     <artifactId>finatra-core</artifactId>
-    <version>0.0.5</version>
+    <version>0.0.8</version>
   </dependency>
 </dependencies>
 ```
@@ -33,13 +33,13 @@ For instance:
 ```scala
 
 class MyApp extends PretendController {
-  
+
   def handleRequest(request: PretendRequest) = {
   	if(request.getThePath == "/hello")
   	  Tuple3(200, "world", Map())
   	} elsif(request.getThePath == "/foo") {
    	  Tuple3(200, "bar", Map())
-  	} else { 
+  	} else {
   	  Tuple3(404, "not found", Map())
   	}
   }
@@ -62,18 +62,19 @@ import com.capotej.finatra_core._
 
 class MyAdaptedController extends PretendController with FinatraController {
   def handleRequest(request: PretendRequest) = {
-    
+
     val newRequest = new FinatraRequest(path=rawRequest.getThePath,
-                       headers=rawRequest.theHeadersGetThem, 
-                       method=rawRequest.whatIsTheMethod)
-    
+                       headers=rawRequest.theHeadersGetThem,
+                       method=rawRequest.whatIsTheMethod,
+                       body=rawRequest.theBody.getBytes)
+
     dispatch(newRequest) match {
       case Some(resp) =>
-        //remember, this is an Any, so you need to cast it to whatever your framework needs 
+        //remember, this is an Any, so you need to cast it to whatever your framework needs
         resp.asInstanceOf[Tuple3[Int, String, Map[String, String]]]
       case None =>
         Tuple3(404, "not found", Map())
-    } 
+    }
   }
 }
 ```
@@ -86,12 +87,12 @@ class MyApp extends AdaptedFinatraController {
   get("/hello") { request =>
     Tuple3(200, "hey", Map())
   }
-  
+
   get("/foo") { request =>
     Tuple3(200, "bar", Map())
-  
-  get("/my/name/is/:name") { request => 
-    Tuple3(200, request.params("name"), Map()) 
+
+  get("/my/name/is/:name") { request =>
+    Tuple3(200, request.params("name"), Map())
   }
 }
 
@@ -112,8 +113,8 @@ class AnotherApp extends AdaptedFinatraController {
 }
 
 class MainApp extends PretendController {
-  val controllers = new ControllerCollection 
-  
+  val controllers = new ControllerCollection
+
   def init {
     val myApp = new myApp
     val anotherApp = new anotherApp
@@ -125,7 +126,7 @@ class MainApp extends PretendController {
   def handleRequest(request: PretendRequest) = {
     controllers.dispatch(request) match {
       case Some(resp) =>
-        //remember, this is an Any, so you need to cast it to whatever your framework needs 
+        //remember, this is an Any, so you need to cast it to whatever your framework needs
         resp.asInstanceOf[Tuple3[Int,String,Map[String,String]]]
       case None =>
         Tuple3(404, "not found", Map())
@@ -147,11 +148,11 @@ The ```dispatch``` method for either the ```FinatraController``` trait or ```Con
 
 
 
- 
 
 
 
 
- 
+
+
 
 
