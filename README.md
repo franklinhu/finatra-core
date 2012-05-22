@@ -151,7 +151,7 @@ class AnotherApp extends FinatraController {
   }
 }
 
-class AnotherAppSpec extends FinatraSpec with ShouldaMatchers {
+class AnotherAppSpec extends FinatraSpec {
 
   var app = new AnotherApp
 
