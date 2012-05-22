@@ -2,8 +2,9 @@ package com.capotej.finatra_test
 
 import com.capotej.finatra_core._
 import org.scalatest.FlatSpec
+import org.scalatest.matchers.ShouldMatchers
 
-class FinatraSpec extends FlatSpec {
+class FinatraSpec extends FlatSpec with ShouldMatchers{
 
   var lastResponse:Any  = null
   var app:FinatraController = null

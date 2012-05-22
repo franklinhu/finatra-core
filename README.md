@@ -141,6 +141,29 @@ mainApp.start()
 
 ```
 
+#### Testing Controllers
+Use `FinatraSpecHelper` to easily test your controllers.
+
+```scala
+class AnotherApp extends FinatraController {
+  get("/bar") { request =>
+    "response"
+  }
+}
+
+class AnotherAppSpec extends FinatraSpec with ShouldaMatchers {
+
+  var app = new AnotherApp
+
+  "GET /bar" should "respond with 'response'" in {
+    get("/bar")
+    lastRepsone should equal (Some("response"))
+  }
+
+}
+
+```
+
 ### Notes/Gotchas
 
 The ```dispatch``` method for either the ```FinatraController``` trait or ```ControllerCollection``` returns an ```Option[Any]```, where ```Some``` is when a route was found for that request, and ```None``` is when its not. This means you'll have to implement your own error handling.
