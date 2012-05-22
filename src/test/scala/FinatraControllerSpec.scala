@@ -33,7 +33,7 @@ class ControllerCollectionSpec extends FlatSpec with ShouldMatchers {
   "GET /" should "respond 200" in {
 
     val request = new FinatraRequest(path = "/")
-    var response = controllers.dispatch(request)
+    var response = fakeApp.dispatch(request)
 
     response should equal (Some("resp"))
   }
