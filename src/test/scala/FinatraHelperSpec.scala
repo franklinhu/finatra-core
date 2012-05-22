@@ -1,6 +1,6 @@
 package com.capotej.finatra_core
 
-import org.scalatest.matchers.ShouldMatchers
+import com.capotej.finatra_test._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
@@ -15,7 +15,7 @@ class MyApp extends FinatraController {
 }
 
 @RunWith(classOf[JUnitRunner])
-class FinatraHelperSpec extends FinatraSpec with ShouldMatchers {
+class FinatraHelperSpec extends FinatraSpec {
 
   app = new MyApp
 
