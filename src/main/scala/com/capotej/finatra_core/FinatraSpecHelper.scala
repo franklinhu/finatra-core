@@ -1,6 +1,6 @@
-package com.capotej.finatra_test
+package com.capotej.finatra_core
 
-import com.capotej.finatra_core._
+
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 
