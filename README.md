@@ -157,7 +157,7 @@ class AnotherAppSpec extends FinatraSpec with ShouldaMatchers {
 
   "GET /bar" should "respond with 'response'" in {
     get("/bar")
-    lastRepsone should equal (Some("response"))
+    lastResponse should equal (Some("response"))
   }
 
 }
