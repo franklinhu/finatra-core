@@ -47,6 +47,14 @@ class ControllerCollectionSpec extends FlatSpec with ShouldMatchers {
     response should equal (Some("other guy"))
   }
 
+  "POST /hey" should "respond 404" in {
+
+    val request = new FinatraRequest(method="POST", path = "/hey")
+    var response = controllers.dispatch(request)
+
+    response should equal (None)
+  }
+
 }
 
 @RunWith(classOf[JUnitRunner])

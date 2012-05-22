@@ -54,7 +54,9 @@ abstract trait FinatraController {
       case Some((method, pattern, callback)) =>
         Some(callback(request))
       case None =>
-        request.method = "GET"
+        if (request.method == "HEAD") {
+          request.method = "GET"
+        }
         findRoute(request) match {
           case Some((method, pattern, callback)) =>
             Some(callback(request))
