@@ -4,10 +4,10 @@ package com.capotej.finatra_core
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 
-class FinatraSpec extends FlatSpec with ShouldMatchers{
+abstract class FinatraSpec extends FlatSpec with ShouldMatchers{
 
   var lastResponse:Any  = null
-  var app:FinatraController = null
+  def app:FinatraController
 
   def get(path:String, params:Map[String,String]=Map(), headers:Map[String,String]=Map()) {
     buildRequest("GET",path,params,headers)

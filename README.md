@@ -153,7 +153,7 @@ class AnotherApp extends FinatraController {
 
 class AnotherAppSpec extends FinatraSpec {
 
-  var app = new AnotherApp
+  def app = { new AnotherApp }
 
   "GET /bar" should "respond with 'response'" in {
     get("/bar")
