@@ -15,7 +15,7 @@ class MyApp extends FinatraController {
 }
 
 @RunWith(classOf[JUnitRunner])
-class FinatraHelperSpec extends FinatraSpec {
+class FinatraHelperSpec extends AbstractFinatraSpec {
 
   def app = { new MyApp }
 
