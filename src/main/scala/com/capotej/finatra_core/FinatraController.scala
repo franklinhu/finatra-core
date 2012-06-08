@@ -5,15 +5,30 @@ import scala.collection.mutable.ListBuffer
 
 // Generic controller, receive a generic request, and returns a generic response
 
-case class FinatraRequest
-  (var path: String,
-   var method: String = "GET",
-   var body: Array[Byte] = Array(),
-   var params: Map[String, String] = Map(),
-   var multiParams: Map[String, MultipartItem] = Map(),
-   var headers: Map[String, String] = Map())
+case class FinatraRequest(
+  var path: String,
+  var method: String = "GET",
+  var body: Array[Byte] = Array(),
+  var params: Map[String, String] = Map(),
+  var multiParams: Map[String, MultipartItem] = Map(),
+  var headers: Map[String, String] = Map(),
+  var cookies: Map[String, FinatraCookie] = Map()
+)
 
-
+case class FinatraCookie(
+  var expires: Int,
+  var value: String,
+  var comment: String,
+  var commentUrl: String,
+  var domain: String,
+  var ports: Set[Int],
+  var path: String,
+  var version: Int,
+  var name: String,
+  var isDiscard: Boolean,
+  var isHttpOnly: Boolean,
+  var isSecure: Boolean
+)
 
 class ControllerCollection {
   var ctrls: Seq[FinatraController] = Seq()

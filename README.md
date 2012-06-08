@@ -3,8 +3,9 @@ finatra-core
 ## Description
 An easy way to embed the popular [Sinatra](http://sinatrarb.com) routing DSL into your Scala web framework
 
-
 ## Installation
+
+Note: As of 0.1.0, finatra-core is 2.9.2 only
 
 ```xml
 <repositories>
@@ -17,8 +18,8 @@ An easy way to embed the popular [Sinatra](http://sinatrarb.com) routing DSL int
 <dependencies>
   <dependency>
     <groupId>com.capotej</groupId>
-    <artifactId>finatra-core_${scala.version}</artifactId>
-    <version>0.0.11</version>
+    <artifactId>finatra-core</artifactId>
+    <version>0.1.0</version>
   </dependency>
 </dependencies>
 ```
