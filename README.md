@@ -1,4 +1,4 @@
-finatra-core
+finatra-core ![buildstatus](https://secure.travis-ci.org/capotej/finatra-core.png?branch=master)
 ============
 ## Description
 An easy way to embed the popular [Sinatra](http://sinatrarb.com) routing DSL into your Scala web framework
