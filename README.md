@@ -19,7 +19,7 @@ Note: As of 0.1.0, finatra-core is 2.9.2 only
   <dependency>
     <groupId>com.capotej</groupId>
     <artifactId>finatra-core</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
   </dependency>
 </dependencies>
 ```
