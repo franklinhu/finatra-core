@@ -16,18 +16,18 @@ case class FinatraRequest(
 )
 
 case class FinatraCookie(
-  var expires: Int,
-  var value: String,
-  var comment: String,
-  var commentUrl: String,
-  var domain: String,
-  var ports: Set[Int],
-  var path: String,
-  var version: Int,
   var name: String,
-  var isDiscard: Boolean,
-  var isHttpOnly: Boolean,
-  var isSecure: Boolean
+  var value: String,
+  var expires: Int = -1,
+  var comment: String = null,
+  var commentUrl: String = null,
+  var domain: String = null,
+  var ports: Set[Int] = Set(),
+  var path: String = null,
+  var version: Int = 0,
+  var isDiscard: Boolean = false,
+  var isHttpOnly: Boolean = false,
+  var isSecure: Boolean = false
 )
 
 class ControllerCollection {
